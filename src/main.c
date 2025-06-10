@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:12:53 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/10 17:00:01 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:35:57 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 5)
 	{
 		ft_putstr_fd("Usage: ./pipex file1 cmd1 cmd2 file2\n", 2);
-		exit(EXIT_INVALID);
+		exit(EXIT_FAILURE);
 	}
 	if (pipe(fd) == -1)
 		perror("pipe");

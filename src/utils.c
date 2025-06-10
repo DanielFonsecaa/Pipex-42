@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:09:29 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/10 16:52:14 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:41:18 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*ft_get_path(char **envp, char *cmd)
 		free(path);
 		i++;
 	}
-	free(full_path);
+	ft_free(full_path);
 	return (NULL);
 }
 
@@ -50,9 +50,9 @@ void	ft_execute(char *argv, char **envp, int *fd)
 	if (!path)
 	{
 		ft_free(cmd);
-		ft_close_fd(fd);
 		ft_putstr_fd("command not found", 2);
-		exit(EXIT_FAILURE);
+		ft_close_fd(fd);
+		exit(EXIT_NOTFOUND);
 	}
 	if (execve(path, cmd, envp) == -1)
 	{

@@ -93,10 +93,12 @@ get_libft:
 
 tester:
 	@echo "   $(B)$(CYA)TESTER$(D)"
-	@echo "   $(B)$(YEL)Cloning visualizer repository$(D) 💾💾"; \
-	git clone git@github.com:michmos/42_pipex_tester.git tester 
-	@cd  tester && bash run.sh --show-valgrind
-
+	@if [ ! -d "tester" ]; then \
+		echo "   $(B)$(YEL)Cloning visualizer repository$(D) 💾💾"; \
+		git clone https://github.com/o-reo/push_swap_visualizer.git; \
+	else \
+		cd tester && bash run.sh --show-valgrind; \
+	fi
 
 clean:				## Remove object files
 	@echo "   $(B)$(YEL)Cleaning object files $(D)"
