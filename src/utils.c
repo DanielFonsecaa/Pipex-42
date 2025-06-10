@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:09:29 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/10 17:41:18 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/10 18:14:28 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ char	*ft_get_path(char **envp, char *cmd)
 	int		i;
 
 	i = 0;
-	if (!envp)
+	if (!envp || !cmd)
 		return (NULL);
 	while (ft_strnstr(envp[i], "PATH=", 5) == 0)
 		i++;
-	full_path = ft_split(envp[i], ':');
+	full_path = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (full_path[i])
 	{
@@ -32,7 +32,7 @@ char	*ft_get_path(char **envp, char *cmd)
 		path = ft_strjoin(half_path, cmd);
 		free(half_path);
 		if (access(path, F_OK | X_OK) == 0)
-			return (free(full_path), path);
+			return (ft_free(full_path), path);
 		free(path);
 		i++;
 	}

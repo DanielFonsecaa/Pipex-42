@@ -95,7 +95,8 @@ tester:
 	@echo "   $(B)$(CYA)TESTER$(D)"
 	@if [ ! -d "tester" ]; then \
 		echo "   $(B)$(YEL)Cloning visualizer repository$(D) 💾💾"; \
-		git clone https://github.com/o-reo/push_swap_visualizer.git; \
+		git clone git@github.com:michmos/42_pipex_tester.git tester; \
+		cd tester && bash run.sh --show-valgrind; \
 	else \
 		cd tester && bash run.sh --show-valgrind; \
 	fi

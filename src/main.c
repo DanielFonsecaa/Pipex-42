@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:12:53 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/10 17:35:57 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/10 19:04:53 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,24 @@ void	ft_parent(int *fd, char **argv, char **envp)
 	ft_execute(argv[3], envp, fd);
 }
 
+int	ft_wait(pid_t pid1, pid_t pid2)
+{
+	int	status1;
+	int	status2;
+
+	waitpid(pid1, &status1, 0);
+	waitpid(pid2, &status2, 0);
+	if (WIFEXITED(status2))
+		return (WEXITSTATUS(status2));
+	else
+		return (EXIT_FAILURE);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
-	pid_t	pid;
+	pid_t	pid1;
+	pid_t	pid2;
 
 	if (argc != 5)
 	{
@@ -62,11 +76,16 @@ int	main(int argc, char **argv, char **envp)
 	}
 	if (pipe(fd) == -1)
 		perror("pipe");
-	pid = fork();
-	if (pid == -1)
+	pid1 = fork();
+	if (pid1 == -1)
 		perror("fork");
-	else if (pid == 0)
+	else if (pid1 == 0)
 		ft_child(fd, argv, envp);
-	ft_parent(fd, argv, envp);
-	return (1);
+	pid2 = fork();
+	if (pid2 == -1)
+		perror("fork");
+	else if (pid2 == 0)
+		ft_parent(fd, argv, envp);
+	ft_close_fd(fd);
+	return (ft_wait(pid1, pid2));
 }
