@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:09:29 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/13 13:45:18 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/13 15:13:40 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,61 @@ void	ft_execute(char *argv, char **envp, int *fd)
 			ft_close_fd(fd);
 		exit(EXIT_FAILURE);
 	}
+}
+
+void	setup_child(int index, int num_cmds, int **pipes, int *fd)
+{
+	int	i;
+
+	i = 0;
+	if (index == 0)
+	{
+		if (fd[0] != -1)
+			dup2(fd[0], STDIN_FILENO);
+		else
+			close(STDIN_FILENO);
+	}
+	else
+		dup2(pipes[index - 1][0], STDIN_FILENO);
+	if (index == num_cmds - 1 && fd[1] != -1)
+		dup2(fd[1], STDOUT_FILENO);
+	else if (index != num_cmds - 1)
+		dup2(pipes[index][1], STDOUT_FILENO);
+	while (i < num_cmds - 1)
+	{
+		close(pipes[i][0]);
+		close(pipes[i][1]);
+		i++;
+	}
+	if (fd[1] > 2)
+		close(fd[1]);
+}
+
+void	cleanup_pipes(int **pipes, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		close(pipes[i][0]);
+		close(pipes[i][1]);
+		free(pipes[i]);
+		i++;
+	}
+	free(pipes);
+}
+
+int	create_single_pipe(int **pipes, int index)
+{
+	pipes[index] = malloc(sizeof(int) * 2);
+	if (!pipes[index])
+		return (-1);
+	if (pipe(pipes[index]) == -1)
+	{
+		perror("pipe");
+		free(pipes[index]);
+		return (-1);
+	}
+	return (0);
 }
