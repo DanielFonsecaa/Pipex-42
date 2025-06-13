@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:15:42 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/10 19:08:34 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:06:39 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,6 @@ void	ft_parent(int *fd, char **argv, char **envp);
 char	*ft_get_path(char **envp, char *cmd);
 void	ft_execute(char *argv, char **envp, int *fd);
 int		ft_wait(pid_t pid1, pid_t pid2);
+void	ft_process(char **argv, char **envp);
 
 #endif
