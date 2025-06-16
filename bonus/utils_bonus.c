@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:09:29 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/13 15:13:40 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:23:28 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,22 @@ void	setup_child(int index, int num_cmds, int **pipes, int *fd)
 	if (index == 0)
 	{
 		if (fd[0] != -1)
+		{
 			dup2(fd[0], STDIN_FILENO);
+			if (fd[0] > 2)
+				close(fd[0]);
+		}
 		else
 			close(STDIN_FILENO);
 	}
 	else
 		dup2(pipes[index - 1][0], STDIN_FILENO);
 	if (index == num_cmds - 1 && fd[1] != -1)
+	{
 		dup2(fd[1], STDOUT_FILENO);
+		if (fd[1] > 2)
+			close(fd[1]);
+	}
 	else if (index != num_cmds - 1)
 		dup2(pipes[index][1], STDOUT_FILENO);
 	while (i < num_cmds - 1)
@@ -88,8 +96,6 @@ void	setup_child(int index, int num_cmds, int **pipes, int *fd)
 		close(pipes[i][1]);
 		i++;
 	}
-	if (fd[1] > 2)
-		close(fd[1]);
 }
 
 void	cleanup_pipes(int **pipes, int count)

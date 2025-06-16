@@ -33,7 +33,7 @@ BUILD_PATH		= .build
 BONUS_BUILD_PATH = .build_bonus
 
 FILES	= main.c free.c utils.c
-BONUS_FILES	= main_bonus.c free_bonus.c utils_bonus.c
+BONUS_FILES	= main_bonus.c free_bonus.c utils_bonus.c here_doc_bonus.c
 
 SRC						= $(addprefix $(SRC_PATH)/, $(FILES))
 OBJS					= $(SRC:$(SRC_PATH)/%.c=$(BUILD_PATH)/%.o)
@@ -118,7 +118,7 @@ get_libft:
 	@git clone $(LIBFT_URL) $(LIBFT_PATH);
 	@echo "    $(B)$(GRN)Libft submodule download$(D): $(_SUCCESS) ✔︎ 💾"
 
-bonus: $(BONUS_BUILD_PATH) $(LIBFT_ARC) $(BONUS_OBJS)	## Compile bonus version
+bonus: deps $(BONUS_BUILD_PATH) $(LIBFT_ARC) $(BONUS_OBJS)	## Compile bonus version
 	@echo "$(GOLD)Compiling $(SILV)$(NAME)$(GOLD) bonus version$(D)"
 	@rm -rf pipex
 	@$(CC) $(CFLAGS) $(BONUS_OBJS) $(INC) $(LIBFT_ARC) -o $(NAME)

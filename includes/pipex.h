@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:15:42 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/13 15:41:27 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:13:29 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_pipeline
 	int		**pipes;
 	pid_t	*pids;
 	int		fd[2];
+	int		num_cmds;
 }	t_pipeline;
 
 // closes and frees
@@ -60,7 +61,10 @@ int		wait_and_get_exit_status(pid_t *pids, int num_cmds);
 //pipes
 int		**create_pipes(int num_pipes);
 int		create_single_pipe(int **pipes, int index);
-void	init_pipeline(int argc, char **argv, t_pipeline *data);
-void	execute_pipeline(int argc, char **argv, char **envp, t_pipeline *data);
+void	init_pipeline(int argc, char **argv, t_pipeline *data, int here_doc);
+void	execute_pipeline(char **argv, char **envp, t_pipeline *data, int here_doc);
+
+// here_doc
+void	ft_here(char **argv, int *fd);
 
 #endif

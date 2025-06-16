@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:13:37 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/13 15:40:30 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:14:32 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,48 +38,54 @@ int	**create_pipes(int num_pipes)
 	return (pipes);
 }
 
-void	init_pipeline(int argc, char **argv, t_pipeline *data)
+void	init_pipeline(int argc, char **argv, t_pipeline *data, int here_doc)
 {
-	int	num_cmds;
-
-	num_cmds = argc - 3;
-	data->pipes = create_pipes(num_cmds - 1);
-	data->pids = malloc(sizeof(pid_t) * num_cmds);
-	if (!data->pids)
+	if (here_doc)
 	{
-		cleanup_resources(data->pipes, num_cmds - 1, NULL);
-		exit(EXIT_FAILURE);
+		ft_here(argv, data->fd);
+		data->fd[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 	}
-	data->fd[0] = open(argv[1], O_RDONLY);
-	if (data->fd[0] == -1)
-		perror(argv[1]);
-	data->fd[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else
+	{
+		data->fd[0] = open(argv[1], O_RDONLY);
+		if (data->fd[0] == -1)
+			perror(argv[1]);
+		data->fd[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	}
 	if (data->fd[1] == -1)
 		perror(argv[argc - 1]);
+	data->pipes = create_pipes(data->num_cmds - 1);
+	data->pids = malloc(sizeof(pid_t) * data->num_cmds);
+	if (!data->pids)
+	{
+		cleanup_resources(data->pipes, data->num_cmds - 1, NULL);
+		exit(EXIT_FAILURE);
+	}
 }
 
-void	execute_pipeline(int argc, char **argv, char **envp, t_pipeline *data)
+void	execute_pipeline(char **argv, char **envp, t_pipeline *data, int here_doc)
 {
-	int	num_cmds;
 	int	i;
 
-	num_cmds = argc - 3;
 	i = 0;
-	while (i < num_cmds)
+	while (i < data->num_cmds)
 	{
 		data->pids[i] = fork();
 		if (data->pids[i] == -1)
 		{
 			perror("fork");
-			close_fds(data->pipes, num_cmds - 1, data->fd[0], data->fd[1]);
-			cleanup_resources(data->pipes, num_cmds - 1, data->pids);
+			close_fds(data->pipes, data->num_cmds - 1, data->fd[0], data->fd[1]);
+			cleanup_resources(data->pipes, data->num_cmds - 1, data->pids);
 			exit(EXIT_FAILURE);
 		}
 		else if (data->pids[i] == 0)
 		{
-			setup_child(i, num_cmds, data->pipes, data->fd);
-			cleanup_resources(data->pipes, num_cmds - 1, data->pids);
-			ft_execute(argv[i + 2], envp, NULL);
+			setup_child(i, data->num_cmds, data->pipes, data->fd);
+			cleanup_resources(data->pipes, data->num_cmds - 1, data->pids);
+			if (here_doc)
+				ft_execute(argv[i + 3], envp, NULL);
+			else
+				ft_execute(argv[i + 2], envp, NULL);
 			exit(EXIT_FAILURE);
 		}
 		i++;
@@ -112,17 +118,21 @@ int	wait_and_get_exit_status(pid_t *pids, int num_cmds)
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipeline	data;
-	int			num_cmds;
 	int			last_exit_status;
+	int			here_doc;
 
+	here_doc = (argc > 5 && ft_strcmp(argv[1], "here_doc") == 0);
 	if (argc >= 5)
 	{
-		num_cmds = argc - 3;
-		init_pipeline(argc, argv, &data);
-		execute_pipeline(argc, argv, envp, &data);
-		close_fds(data.pipes, num_cmds - 1, data.fd[0], data.fd[1]);
-		last_exit_status = wait_and_get_exit_status(data.pids, num_cmds);
-		cleanup_resources(data.pipes, num_cmds - 1, data.pids);
+		if (here_doc)
+			data.num_cmds = argc - 4;
+		else
+			data.num_cmds = argc - 3;
+		init_pipeline(argc, argv, &data, here_doc);
+		execute_pipeline(argv, envp, &data, here_doc);
+		close_fds(data.pipes, data.num_cmds - 1, data.fd[0], data.fd[1]);
+		last_exit_status = wait_and_get_exit_status(data.pids, data.num_cmds);
+		cleanup_resources(data.pipes, data.num_cmds - 1, data.pids);
 		if (data.fd[1] == -1)
 			exit(EXIT_FAILURE);
 		exit(last_exit_status);
