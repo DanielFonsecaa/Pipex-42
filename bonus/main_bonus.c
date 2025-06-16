@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:13:37 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/16 16:14:32 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:55:58 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,12 @@ void	init_pipeline(int argc, char **argv, t_pipeline *data, int here_doc)
 	data->pids = malloc(sizeof(pid_t) * data->num_cmds);
 	if (!data->pids)
 	{
-		cleanup_resources(data->pipes, data->num_cmds - 1, NULL);
+		clean_res(data->pipes, data->num_cmds - 1, NULL);
 		exit(EXIT_FAILURE);
 	}
 }
 
-void	execute_pipeline(char **argv, char **envp, t_pipeline *data, int here_doc)
+void	execute_pipeline(char **argv, char **envp, t_pipeline *data, int h_d)
 {
 	int	i;
 
@@ -72,17 +72,12 @@ void	execute_pipeline(char **argv, char **envp, t_pipeline *data, int here_doc)
 	{
 		data->pids[i] = fork();
 		if (data->pids[i] == -1)
-		{
-			perror("fork");
-			close_fds(data->pipes, data->num_cmds - 1, data->fd[0], data->fd[1]);
-			cleanup_resources(data->pipes, data->num_cmds - 1, data->pids);
-			exit(EXIT_FAILURE);
-		}
+			ft_fork_error(data);
 		else if (data->pids[i] == 0)
 		{
 			setup_child(i, data->num_cmds, data->pipes, data->fd);
-			cleanup_resources(data->pipes, data->num_cmds - 1, data->pids);
-			if (here_doc)
+			clean_res(data->pipes, data->num_cmds - 1, data->pids);
+			if (h_d)
 				ft_execute(argv[i + 3], envp, NULL);
 			else
 				ft_execute(argv[i + 2], envp, NULL);
@@ -132,7 +127,7 @@ int	main(int argc, char **argv, char **envp)
 		execute_pipeline(argv, envp, &data, here_doc);
 		close_fds(data.pipes, data.num_cmds - 1, data.fd[0], data.fd[1]);
 		last_exit_status = wait_and_get_exit_status(data.pids, data.num_cmds);
-		cleanup_resources(data.pipes, data.num_cmds - 1, data.pids);
+		clean_res(data.pipes, data.num_cmds - 1, data.pids);
 		if (data.fd[1] == -1)
 			exit(EXIT_FAILURE);
 		exit(last_exit_status);

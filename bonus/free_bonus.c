@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:31:22 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/13 15:40:23 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:45:39 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_free(char **str)
 	free(str);
 }
 
-void	cleanup_resources(int **pipes, int num_pipes, pid_t *pids)
+void	clean_res(int **pipes, int num_pipes, pid_t *pids)
 {
 	int	i;
 

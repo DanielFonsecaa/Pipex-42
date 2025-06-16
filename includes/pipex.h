@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:15:42 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/16 16:13:29 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:54:35 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ typedef struct s_pipeline
 void	ft_close_fd(int *fd);
 void	ft_free(char **str);
 void	close_fds(int **pipes, int num_pipes, int fd_in, int fd_out);
-void	cleanup_resources(int **pipes, int num_pipes, pid_t *pids);
+void	clean_res(int **pipes, int num_pipes, pid_t *pids);
 void	cleanup_pipes(int **pipes, int count);
+void	ft_fork_error(t_pipeline *data);
 
 // child and parent process functions
 void	ft_child(int *fd, char **argv, char **envp);
@@ -62,7 +63,7 @@ int		wait_and_get_exit_status(pid_t *pids, int num_cmds);
 int		**create_pipes(int num_pipes);
 int		create_single_pipe(int **pipes, int index);
 void	init_pipeline(int argc, char **argv, t_pipeline *data, int here_doc);
-void	execute_pipeline(char **argv, char **envp, t_pipeline *data, int here_doc);
+void	execute_pipeline(char **argv, char **envp, t_pipeline *data, int doc);
 
 // here_doc
 void	ft_here(char **argv, int *fd);

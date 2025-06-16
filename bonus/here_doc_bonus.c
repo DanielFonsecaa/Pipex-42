@@ -6,14 +6,13 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 12:37:41 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/16 16:27:50 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:56:15 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../includes/pipex.h"
 
-void    ft_here(char **argv, int *fd)
+void	ft_here(char **argv, int *fd)
 {
 	char	*limiter;
 	char	*line;
@@ -28,9 +27,9 @@ void    ft_here(char **argv, int *fd)
 		line = get_next_line(0);
 		if (!line)
 			break ;
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0 &&
-			(line[ft_strlen(limiter)] == '\n' ||
-			line[ft_strlen(limiter) + 1] == '\0'))
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
+			&& (line[ft_strlen(limiter)] == '\n'
+				|| line[ft_strlen(limiter) + 1] == '\0'))
 		{
 			free(line);
 			break ;
@@ -40,4 +39,12 @@ void    ft_here(char **argv, int *fd)
 	}
 	close(pipe_fd[1]);
 	fd[0] = pipe_fd[0];
+}
+
+void	ft_fork_error(t_pipeline *data)
+{
+	perror("fork");
+	close_fds(data->pipes, data->num_cmds - 1, data->fd[0], data->fd[1]);
+	clean_res(data->pipes, data->num_cmds - 1, data->pids);
+	exit(EXIT_FAILURE);
 }
