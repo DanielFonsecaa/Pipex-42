@@ -1,12 +1,10 @@
-# Pipex-42
-
 <!--div align="center">
 
-![push_swape](https://github.com/user-attachments/assets/545044e6-550c-4114-ae17-eb472b62aab4)
+![pipexm](https://github.com/user-attachments/assets/6ac48d02-1374-4a69-92c0-ada8e9cd82d4)
 
 </div-->
 
-## What is Pipex?
+# Pipex-42
 
 Pipex is a project that recreates the shell’s ability to execute commands connected by pipes (`|`), handling input/output redirection and process management. It demonstrates how Unix-like systems use processes and file descriptors to build command pipelines.
 
@@ -77,8 +75,8 @@ A process is an instance of a running program. Each process has its own memory s
 - **`access()`**: To check if a command exists and is executable before trying to run it.
 - **`wait()`/`waitpid()`**: To synchronize the parent with its children and retrieve their exit statuses.
 
-<!--## Visual
+## Visual
 
 Here’s a simple visual representation of how the pipeline works with three commands:
 
-[Pipeline Diagram](./path/to/your/image.png) -->
+![Pipeline Diagram](https://github.com/user-attachments/assets/7934e00e-13a6-48c8-97f3-04e3dd96d790)
