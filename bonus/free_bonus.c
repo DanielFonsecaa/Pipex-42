@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:31:22 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/16 20:45:39 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:02:50 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,6 @@ void	ft_free(char **str)
 	while (str[i])
 		free(str[i++]);
 	free(str);
-}
-
-void	clean_res(int **pipes, int num_pipes, pid_t *pids)
-{
-	int	i;
-
-	if (pipes)
-	{
-		i = 0;
-		while (i < num_pipes)
-		{
-			if (pipes[i])
-				free(pipes[i]);
-			i++;
-		}
-		free(pipes);
-	}
-	if (pids)
-		free(pids);
 }
 
 void	close_fds(int **pipes, int num_pipes, int fd_in, int fd_out)
@@ -71,6 +52,21 @@ void	cleanup_malloc(int **pipes, int count)
 	i = 0;
 	while (i < count)
 	{
+		free(pipes[i]);
+		i++;
+	}
+	free(pipes);
+}
+
+void	cleanup_pipes(int **pipes, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		close(pipes[i][0]);
+		close(pipes[i][1]);
 		free(pipes[i]);
 		i++;
 	}

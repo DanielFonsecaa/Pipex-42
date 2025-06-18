@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:09:29 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/16 20:38:50 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/18 13:39:45 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,6 @@ void	ft_execute(char *argv, char **envp, int *fd)
 
 void	setup_child(int index, int num_cmds, int **pipes, int *fd)
 {
-	int	i;
-
-	i = 0;
 	if (index == 0)
 	{
 		if (fd[0] != -1)
@@ -90,35 +87,57 @@ void	setup_child(int index, int num_cmds, int **pipes, int *fd)
 	}
 	else if (index != num_cmds - 1)
 		dup2(pipes[index][1], STDOUT_FILENO);
-	while (i < num_cmds - 1)
-		ft_close_fd(pipes[i++]);
+	close_fds(pipes, num_cmds - 1, -1, -1);
 }
 
-void	cleanup_pipes(int **pipes, int count)
+int	wait_and_get_exit_status(pid_t *pids, int num_cmds)
 {
 	int	i;
+	int	status;
+	int	last_exit_status;
 
 	i = 0;
-	while (i < count)
+	last_exit_status = 0;
+	while (i < num_cmds)
 	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		free(pipes[i]);
+		waitpid(pids[i], &status, 0);
+		if (i == num_cmds - 1)
+		{
+			if (WIFEXITED(status))
+				last_exit_status = WEXITSTATUS(status);
+			else
+				last_exit_status = 1;
+		}
 		i++;
 	}
-	free(pipes);
+	return (last_exit_status);
 }
 
-int	create_single_pipe(int **pipes, int index)
+void	ft_here(char **argv, int *fd)
 {
-	pipes[index] = malloc(sizeof(int) * 2);
-	if (!pipes[index])
-		return (-1);
-	if (pipe(pipes[index]) == -1)
+	char	*limiter;
+	char	*line;
+	int		pipe_fd[2];
+
+	limiter = argv[2];
+	if (pipe(pipe_fd) == -1)
+		exit(EXIT_FAILURE);
+	while (1)
 	{
-		perror("pipe");
-		free(pipes[index]);
-		return (-1);
+		ft_putstr_fd("heredoc> ", 1);
+		line = get_next_line(0);
+		if (!line)
+			break ;
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
+			&& (line[ft_strlen(limiter)] == '\n'
+				|| line[ft_strlen(limiter) + 1] == '\0'))
+		{
+			free(line);
+			break ;
+		}
+		write(pipe_fd[1], line, ft_strlen(line));
+		free(line);
 	}
-	return (0);
+	close(pipe_fd[1]);
+	fd[0] = pipe_fd[0];
 }

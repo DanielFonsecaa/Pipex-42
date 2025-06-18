@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:15:42 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/16 20:54:35 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/18 11:57:26 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ typedef struct s_pipeline
 void	ft_close_fd(int *fd);
 void	ft_free(char **str);
 void	close_fds(int **pipes, int num_pipes, int fd_in, int fd_out);
-void	clean_res(int **pipes, int num_pipes, pid_t *pids);
 void	cleanup_pipes(int **pipes, int count);
 void	ft_fork_error(t_pipeline *data);
 

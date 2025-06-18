@@ -33,7 +33,7 @@ BUILD_PATH		= .build
 BONUS_BUILD_PATH = .build_bonus
 
 FILES	= main.c free.c utils.c
-BONUS_FILES	= main_bonus.c free_bonus.c utils_bonus.c here_doc_bonus.c
+BONUS_FILES	= main_bonus.c free_bonus.c utils_bonus.c pipes_bonus.c
 
 SRC						= $(addprefix $(SRC_PATH)/, $(FILES))
 OBJS					= $(SRC:$(SRC_PATH)/%.c=$(BUILD_PATH)/%.o)
