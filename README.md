@@ -1,20 +1,20 @@
-<!--div align="center">
+<div align="center">
 
 ![pipexm](https://github.com/user-attachments/assets/6ac48d02-1374-4a69-92c0-ada8e9cd82d4)
 
-</div-->
+</div>
 
 # Pipex-42
 
 Pipex is a project that recreates the shell’s ability to execute commands connected by pipes (`|`), handling input/output redirection and process management. It demonstrates how Unix-like systems use processes and file descriptors to build command pipelines.
 
-<!--div align="center">
+<div align="center">
 
 | Grade | Evaluation Information |
 | :---- | :--------------------- |
-| <img src="https://img.shields.io/badge/84%20%2F%20100%20%E2%98%85-success"/> | `3 peers` `30 mins` |
+| <img src="https://img.shields.io/badge/125%20%2F%20100%20%E2%98%85-success"/> | `3 peers` `30 mins` |
 
-</div-->
+</div>
 
 ## Key Concepts and System Calls
 
