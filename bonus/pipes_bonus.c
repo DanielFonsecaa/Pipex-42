@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:16:53 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/18 12:20:31 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/20 11:07:19 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	create_single_pipe(int **pipes, int index)
 	return (0);
 }
 
-int	**create_pipes(int num_pipes)
+int	**create_pipes(int num_pipes, t_pipeline *data)
 {
 	int	**pipes;
 	int	i;
@@ -41,7 +41,7 @@ int	**create_pipes(int num_pipes)
 		if (create_single_pipe(pipes, i) == -1)
 		{
 			if (pipes[i])
-				cleanup_pipes(pipes, i);
+				cleanup_pipes(pipes, i, data);
 			else
 				cleanup_malloc(pipes, i);
 			exit(EXIT_FAILURE);
@@ -67,11 +67,11 @@ void	init_pipeline(int argc, char **argv, t_pipeline *data, int here_doc)
 	}
 	if (data->fd[1] == -1)
 		perror(argv[argc - 1]);
-	data->pipes = create_pipes(data->num_cmds - 1);
+	data->pipes = create_pipes(data->num_cmds - 1, data);
 	data->pids = malloc(sizeof(pid_t) * data->num_cmds);
 	if (!data->pids)
 	{
-		cleanup_pipes(data->pipes, data->num_cmds - 1);
+		cleanup_pipes(data->pipes, data->num_cmds - 1, data);
 		exit(EXIT_FAILURE);
 	}
 }
@@ -89,7 +89,7 @@ void	execute_pipeline(char **argv, char **envp, t_pipeline *data, int h_d)
 		else if (data->pids[i] == 0)
 		{
 			setup_child(i, data->num_cmds, data->pipes, data->fd);
-			cleanup_pipes(data->pipes, data->num_cmds - 1);
+			cleanup_pipes(data->pipes, data->num_cmds - 1, data);
 			if (h_d)
 				ft_execute(argv[i + 3], envp, NULL);
 			else
@@ -104,6 +104,6 @@ void	ft_fork_error(t_pipeline *data)
 {
 	perror("fork");
 	close_fds(data->pipes, data->num_cmds - 1, data->fd[0], data->fd[1]);
-	cleanup_pipes(data->pipes, data->num_cmds - 1);
+	cleanup_pipes(data->pipes, data->num_cmds - 1, data);
 	exit(EXIT_FAILURE);
 }

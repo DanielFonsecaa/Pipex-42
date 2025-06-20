@@ -6,7 +6,7 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 13:13:37 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/18 12:21:23 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/20 11:08:55 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char **envp)
 		execute_pipeline(argv, envp, &data, here_doc);
 		close_fds(data.pipes, data.num_cmds - 1, data.fd[0], data.fd[1]);
 		last_exit_status = wait_and_get_exit_status(data.pids, data.num_cmds);
-		cleanup_pipes(data.pipes, data.num_cmds - 1);
+		cleanup_pipes(data.pipes, data.num_cmds - 1, &data);
 		if (data.fd[1] == -1)
 			exit(EXIT_FAILURE);
 		exit(last_exit_status);

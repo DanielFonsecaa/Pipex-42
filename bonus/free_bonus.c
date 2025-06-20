@@ -6,11 +6,12 @@
 /*   By: dda-fons <dda-fons@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:31:22 by dda-fons          #+#    #+#             */
-/*   Updated: 2025/06/18 12:02:50 by dda-fons         ###   ########.fr       */
+/*   Updated: 2025/06/20 11:12:08 by dda-fons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
+#include "pipex.h"
 
 void	ft_close_fd(int *fd)
 {
@@ -58,7 +59,7 @@ void	cleanup_malloc(int **pipes, int count)
 	free(pipes);
 }
 
-void	cleanup_pipes(int **pipes, int count)
+void	cleanup_pipes(int **pipes, int count, t_pipeline *data)
 {
 	int	i;
 
@@ -71,4 +72,5 @@ void	cleanup_pipes(int **pipes, int count)
 		i++;
 	}
 	free(pipes);
+	free(data->pids);
 }
